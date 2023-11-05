@@ -56,13 +56,12 @@
 `Scikit-learn`
 `Matplotlib` 
 `Seaborn`
-`Pipeline`
 `GridSearchCV`
-`make_column_transformer`
 `StandardScaler`
 `RandomForestRegressor`
+`DicisionTreeRegressor`
 `LinearRegression`
-`CatBoostRegressor`
+`DummyRegressor`
 
 <br>
 
