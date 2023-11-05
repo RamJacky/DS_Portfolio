@@ -19,31 +19,29 @@
 
 <tr>
   <td>2</td>
-  <td><a href = "https://github.com/elena-iliushina/Portfolio/tree/main/Apartments_ads_project">Исследование объявлений о продаже квартир в Санкт-Петербурге</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/YandexApartments_project">Исследование объявлений о продаже квартир в Санкт-Петербурге</a></td>
   <td>Data Analyst / Интернет-сервисы</td>
   <td>Используя данные сервиса Яндекс.Недвижимость, определить рыночную стоимость объектов недвижимости и типичные параметры квартир. Это позволит построить автоматизированную систему: она отследит аномалии и мошенническую деятельность</td>
   <td> 
     <img src="https://img.shields.io/badge/Matplotlib-343942?style=flat&logo=matplotlib&logoColor=4698C6" alt="Matplotlib">
-    <img src="https://img.shields.io/badge/Seaborn-4698C6?style=flat&logo=linear&logoColor=ffffff" alt="Seaborn">
   </td>
 </tr> 
   
  <tr>
   <td>7</td>
-  <td><a href = "https://github.com/elena-iliushina/Portfolio/tree/main/Gold_concentration_project">Исследование технологического процесса очистки золота</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Gold_project">Исследование технологического процесса очистки золота</a></td>
   <td>Data Scientist / Регрессия / Data Analyst / Промышленность</td>
   <td>Спрогнозировать концентрацию золота при проведении процесса очистки золота</td>
   <td> 
     <img src="https://img.shields.io/badge/Matplotlib-343942?style=flat&logo=matplotlib&logoColor=4698C6" alt="Matplotlib">
     <img src="https://img.shields.io/badge/Seaborn-4698C6?style=flat&logo=linear&logoColor=ffffff" alt="Seaborn">
     <img src="https://img.shields.io/badge/Scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=ffffff" alt="Scikit">
-    <img src="https://img.shields.io/badge/CatBoost-DDB71D?style=flat&logo=hubspot&logoColor=ffffff" alt="CatBoost">
   </td>
 </tr>  
 
 <tr>
   <td>1</td>
-  <td><a href = "https://github.com/elena-iliushina/Portfolio/tree/main/Final_project">Прогнозирование оттока клиентов</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Telekom_project">Прогнозирование оттока клиентов</a></td>
   <td>Data Scientist / Классификация / Data Analyst / Телеком</td> 
   <td>Построить модель, прогнозирующую отток клиентов из телекоммуникационной компании.</td>
   <td> 
@@ -61,6 +59,6 @@
 
 # Задачи SQL:
 
-<a href = "https://github.com/elena-iliushina/Portfolio/tree/main/SQL_project">Задачи, решенные мной на языке SQL</a>
+<a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/SQL_tasks">Задачи, решенные мной на языке SQL</a>
 
 </table>
