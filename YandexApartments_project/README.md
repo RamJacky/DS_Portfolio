@@ -119,7 +119,7 @@
 
 Выявлен топ 10 населенных пунктов по кол-ву объявлений:
 
-![Table_Top10](https://github.com/RamJacky/DS_Portfolio/blob/main/YandexApartments_project/1.png)
+![Table_Top10](https://github.com/RamJacky/DS_Portfolio/blob/main/YandexApartments_project/attachments/1.png)
 
 самые дешевые объекты находятся в Старополье: 11206 (среднее значение цены за кв. м.)
 самые дорогие объекты находятся в Лисий Нос	113728 (среднее значение цены за кв. м.)
