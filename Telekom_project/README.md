@@ -157,7 +157,7 @@
   
   <br>
   
-  <img width="800" alt="Screenshot_62" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/72284143-af1d-43c0-9d83-48fef940da97">
+  ![1](https://github.com/RamJacky/DS_Portfolio/blob/main/Telekom_project/attachments/1.png)
 
   <br>
 
@@ -168,7 +168,7 @@
 
   <br>
 
-  <img width="800" alt="Screenshot_65" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/7d0329dc-bee2-4ec5-9b99-93a7f2942256">
+  ![2](https://github.com/RamJacky/DS_Portfolio/blob/main/Telekom_project/attachments/2.png)
 
   <br>
 
@@ -177,8 +177,8 @@
 
   <br>
 
-  <img width="800" alt="Screenshot_64" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/8ee91e3a-6e56-421b-ab72-c9416238a298">
-  <img width="800" alt="Screenshot_63" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/01dbb253-cb6a-4f3c-ad8e-490b33f5ba78">
+  ![3](https://github.com/RamJacky/DS_Portfolio/blob/main/Telekom_project/attachments/3.png)
+  ![4](https://github.com/RamJacky/DS_Portfolio/blob/main/Telekom_project/attachments/4.png)
 
   <br>
 
