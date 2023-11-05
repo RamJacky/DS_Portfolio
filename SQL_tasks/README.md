@@ -2,7 +2,7 @@
 
 *Схема базы данных*
 
-![242782466-6149324a-72d3-4410-94c7-29fb626f03cc](https://github.com/elena-iliushina/Portfolio/assets/133641038/22e12838-fe98-400c-9d4a-bfc0cba1be92)
+![data_base](https://github.com/RamJacky/DS_Portfolio/blob/main/SQL_tasks/db.png)
 
 1. Отобразите количество привлечённых средств для новостных компаний США. Используйте данные из таблицы company. Отсортируйте таблицу по убыванию значений в поле funding_total .
 
