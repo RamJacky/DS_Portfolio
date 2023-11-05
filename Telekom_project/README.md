@@ -111,15 +111,6 @@
 - пользуется автоматическими способами оплаты (Bank transfer или Credit card),
 - был с компанией 1,5 - 4,5 года от начала действия договора.
 
-  <br>
-
-  <img width="800" alt="Screenshot_70" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/4230a64f-9736-40e6-859b-d9020ac68d93">
-  <img width="800" alt="Screenshot_72" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/ea68383b-a5d6-46bd-8033-adb8293963f4">
-  <img width="800" alt="Screenshot_73" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/06378842-8422-40ec-8af4-db2a4c162076">
-
-
-  <br>
-
 <br>
 
 **3. Обучение моделей**
