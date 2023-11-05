@@ -7,43 +7,39 @@
 1. Отобразите количество привлечённых средств для новостных компаний США. Используйте данные из таблицы company. Отсортируйте таблицу по убыванию значений в поле funding_total .
 
 ```sql
-SELECT funding_total
-FROM company
-WHERE category_code = 'news' 
-      AND country_code = 'USA'
-ORDER BY funding_total DESC;
+SELECT SUM(funding_total) as total_funding 
+FROM company 
+WHERE category_code = 'news' AND country_code = 'USA' 
+GROUP BY name 
+ORDER BY total_funding DESC
 ```
 ---
 
 2. Найдите общую сумму сделок по покупке одних компаний другими в долларах. Отберите сделки, которые осуществлялись только за наличные с 2011 по 2013 год включительно.
 
 ```sql
-SELECT SUM(price_amount)
-FROM acquisition
-WHERE term_code = 'cash'
-      AND EXTRACT(YEAR FROM CAST(acquired_at AS TIMESTAMP)) BETWEEN 2011 AND 2013;
+SELECT SUM(price_amount) as total_deals 
+FROM acquisition 
+WHERE term_code = 'cash' AND acquired_at BETWEEN '2011-01-01' AND '2013-12-31'
 ```
 ---
 
 3. Отобразите имя, фамилию и названия аккаунтов людей в твиттере, у которых названия аккаунтов начинаются на 'Silver'.
 
 ```sql
-SELECT first_name,
-       last_name,
-       twitter_username
+SELECT first_name, last_name, twitter_username
 FROM people
-WHERE twitter_username LIKE 'Silver%';
+WHERE twitter_username LIKE 'Silver%'
 ```
 ---
 
 4. Для каждой страны отобразите общую сумму привлечённых инвестиций, которые получили компании, зарегистрированные в этой стране. Страну, в которой зарегистрирована компания, можно определить по коду страны. Отсортируйте данные по убыванию суммы.
 
 ```sql
-SELECT country_code,
-       SUM(funding_total) AS country_funding_total
+SELECT country_code, SUM(funding_total) as total_funding
 FROM company
 GROUP BY country_code
-ORDER BY country_funding_total DESC;
+ORDER BY total_funding DESC
 ```
 ---
 
@@ -51,12 +47,10 @@ ORDER BY country_funding_total DESC;
   Оставьте в итоговой таблице только те записи, в которых минимальное значение суммы инвестиций не равно нулю и не равно максимальному значению.
 
 ```sql
-SELECT funded_at,
-       MAX(raised_amount) AS max_raised_amount,
-       MIN(raised_amount) AS min_raised_amount
+SELECT funded_at, MIN(funding_round.raised_amount) as min_funding, MAX(funding_round.raised_amount) as max_funding
 FROM funding_round
 GROUP BY funded_at
-HAVING MIN(raised_amount) != 0 AND MIN(raised_amount) != MAX(raised_amount);
+HAVING MIN(funding_round.raised_amount) <> 0 AND MIN(funding_round.raised_amount) <> MAX(funding_round.raised_amount)
 ```
 ---
 
@@ -67,13 +61,13 @@ HAVING MIN(raised_amount) != 0 AND MIN(raised_amount) != MAX(raised_amount);
   Отобразите все поля таблицы fund и новое поле с категориями.
 
 ```sql
-SELECT *,
-       CASE
-           WHEN invested_companies < 20 THEN 'low_activity'
-           WHEN invested_companies >= 20 AND invested_companies < 100 THEN 'middle_activity'
-           WHEN invested_companies >= 100 THEN 'high_activity'
-       END AS category_invested_companies
-FROM fund;
+SELECT *, 
+CASE
+    WHEN invested_companies >= 100 THEN 'high_activity'
+    WHEN invested_companies >= 20 AND invested_companies < 100 THEN 'middle_activity'
+    ELSE 'low_activity'
+END AS activity_category
+FROM fund
 ```
 ---
 
@@ -82,29 +76,35 @@ FROM fund;
   - Выгрузите десять самых активных стран-инвесторов: отсортируйте таблицу по среднему количеству компаний от большего к меньшему. Затем добавьте сортировку по коду страны в лексикографическом порядке.
 
 ```sql
-SELECT country_code,
-       MIN(invested_companies) AS min_invested_companies,
-       MAX(invested_companies) AS max_invested_companies,
-       AVG(invested_companies) AS avg_invested_companies
-FROM fund
-WHERE EXTRACT(YEAR FROM CAST(founded_at AS TIMESTAMP)) BETWEEN 2010 AND 2012
-GROUP BY country_code
-HAVING MIN(invested_companies) != 0
-ORDER BY avg_invested_companies DESC, country_code
-LIMIT 10;
+SELECT 
+    country_code, 
+    MIN(invested_companies) AS min_invested, 
+    MAX(invested_companies) AS max_invested, 
+    AVG(invested_companies) AS avg_invested
+FROM 
+    fund
+WHERE 
+    founded_at BETWEEN '2010-01-01' AND '2012-12-31'
+GROUP BY 
+    country_code
+HAVING 
+    MIN(invested_companies) > 0
+ORDER BY 
+    avg_invested DESC, 
+    country_code ASC
+LIMIT 10;  
 ```
 ---
 
 8. Для каждой компании найдите количество учебных заведений, которые окончили её сотрудники. Выведите название компании и число уникальных названий учебных заведений. Составьте топ-5 компаний по количеству университетов.
 
 ```sql
-SELECT c.name,
-       COUNT(DISTINCT e.instituition) AS count_instituition
-FROM company c
-     INNER JOIN people p ON p.company_id = c.id
-     INNER JOIN education e ON e.person_id = p.id
-GROUP BY c.name
-ORDER BY count_instituition DESC
+SELECT company.name, COUNT(DISTINCT education.instituition) AS universities_count
+FROM company
+JOIN people ON company.id = people.company_id
+JOIN education ON people.id = education.person_id
+GROUP BY company.name
+ORDER BY universities_count DESC
 LIMIT 5;
 ```
 ---
@@ -112,98 +112,83 @@ LIMIT 5;
 9. Составьте список с уникальными названиями закрытых компаний, для которых первый раунд финансирования оказался последним.
 
 ```sql
-SELECT DISTINCT name
-FROM company
-WHERE status = 'closed'
-      AND id IN (SELECT DISTINCT company_id
-                 FROM funding_round
-                 WHERE is_first_round = 1 
-                       AND is_last_round = 1);
+SELECT DISTINCT company.name
+FROM funding_round fr1
+JOIN funding_round fr2 ON fr1.company_id = fr2.company_id
+JOIN company ON fr1.company_id = company.id
+WHERE fr1.funded_at = fr2.funded_at
+AND fr1.is_first_round = 1 AND fr2.is_last_round = 1 AND company.status = 'closed';
 ```
 ---
 
 10. Составьте список уникальных номеров сотрудников, которые работают в компаниях, отобранных в предыдущем задании.
 
 ```sql
-WITH
-closed_company AS (SELECT DISTINCT id as id
-                    FROM company
-                    WHERE status = 'closed'
-                          AND id IN (SELECT DISTINCT company_id
-                                     FROM funding_round
-                                     WHERE is_first_round = 1 
-                                           AND is_last_round = 1))
-
-SELECT DISTINCT id
+SELECT DISTINCT people.id
 FROM people
-WHERE company_id IN (SELECT id
-                     FROM closed_company);
+WHERE people.company_id IN (
+  SELECT company.id
+  FROM company
+  JOIN funding_round fr1 ON fr1.company_id = company.id
+  JOIN funding_round fr2 ON fr1.company_id = fr2.company_id
+  WHERE fr1.funded_at = fr2.funded_at
+  AND fr1.is_first_round = 1 AND fr2.is_last_round = 1 AND company.status = 'closed'
+);
 ```
 ---
 
 11. Составьте таблицу, куда войдут уникальные пары с номерами сотрудников из предыдущей задачи и учебным заведением, которое окончил сотрудник.
 
 ```sql
-WITH
-closed_company AS (SELECT DISTINCT id as id
-                    FROM company
-                    WHERE status = 'closed'
-                          AND id IN (SELECT DISTINCT company_id
-                                     FROM funding_round
-                                     WHERE is_first_round = 1 
-                                           AND is_last_round = 1))
-
-SELECT DISTINCT p.id,
-                e.instituition
-FROM people p
-     JOIN education e ON p.id = e.person_id
-WHERE p.company_id IN (SELECT id
-                     FROM closed_company);
+SELECT DISTINCT people.id, education.instituition
+FROM people
+JOIN education ON people.id = education.person_id
+WHERE people.company_id IN (
+  SELECT company.id
+  FROM company
+  JOIN funding_round fr1 ON fr1.company_id = company.id
+  JOIN funding_round fr2 ON fr1.company_id = fr2.company_id
+  WHERE fr1.funded_at = fr2.funded_at
+  AND fr1.is_first_round = 1 AND fr2.is_last_round = 1 AND company.status = 'closed'
+);
 ```
 ---
 
 12. Посчитайте количество учебных заведений для каждого сотрудника из предыдущего задания. При подсчёте учитывайте, что некоторые сотрудники могли окончить одно и то же заведение дважды.
 
 ```sql
-WITH
-closed_company AS (SELECT DISTINCT id as id
-                    FROM company
-                    WHERE status = 'closed'
-                          AND id IN (SELECT DISTINCT company_id
-                                     FROM funding_round
-                                     WHERE is_first_round = 1 
-                                           AND is_last_round = 1))
-
-SELECT p.id,
-       COUNT(e.id)
-FROM people p
-     JOIN education e ON p.id = e.person_id
-WHERE p.company_id IN (SELECT id
-                     FROM closed_company)
-GROUP BY p.id;
+SELECT DISTINCT people.id, COUNT(education.instituition) as num_education
+FROM people
+JOIN education ON people.id = education.person_id
+WHERE people.company_id IN (
+  SELECT company.id
+  FROM company
+  JOIN funding_round fr1 ON fr1.company_id = company.id
+  JOIN funding_round fr2 ON fr1.company_id = fr2.company_id
+  WHERE fr1.funded_at = fr2.funded_at
+  AND fr1.is_first_round = 1 AND fr2.is_last_round = 1 AND company.status = 'closed'
+)
+GROUP BY people.id;
 ```
 ---
 
 13. Дополните предыдущий запрос и выведите среднее число учебных заведений (всех, не только уникальных), которые окончили сотрудники разных компаний. Нужно вывести только одну запись, группировка здесь не понадобится.
 
 ```sql
-WITH
-closed_company AS (SELECT DISTINCT id as id
-                    FROM company
-                    WHERE status = 'closed'
-                          AND id IN (SELECT DISTINCT company_id
-                                     FROM funding_round
-                                     WHERE is_first_round = 1 
-                                           AND is_last_round = 1))
-
-SELECT AVG(count_education)
-FROM (SELECT p.id,
-             COUNT(e.id) AS count_education
-       FROM people p
-       JOIN education e ON p.id = e.person_id
-       WHERE p.company_id IN (SELECT id
-                              FROM closed_company)
-       GROUP BY p.id) as a;
+SELECT AVG(num_education) as avg_education
+FROM (SELECT DISTINCT people.id, COUNT(education.instituition) as num_education
+        FROM people
+        JOIN education ON people.id = education.person_id
+        WHERE people.company_id IN (
+            SELECT company.id
+            FROM company
+            JOIN funding_round fr1 ON fr1.company_id = company.id
+            JOIN funding_round fr2 ON fr1.company_id = fr2.company_id
+            WHERE fr1.funded_at = fr2.funded_at
+            AND fr1.is_first_round = 1 AND fr2.is_last_round = 1 AND company.status = 'closed'
+            )
+GROUP BY people.id
+) as subquery;
 ```
 ---
 
@@ -214,25 +199,13 @@ FROM (SELECT p.id,
   - В таблицу войдут данные о компаниях, в истории которых было больше шести важных этапов, а раунды финансирования проходили с 2012 по 2013 год включительно.
 
 ```sql
-WITH
-main_company AS (SELECT id,
-                        name
-                 FROM company
-                 WHERE milestones > 6),
-main_fund AS (SELECT id,
-                     company_id,
-                     raised_amount
-              FROM funding_round
-              WHERE EXTRACT(YEAR FROM CAST(funded_at AS TIMESTAMP)) BETWEEN 2012 AND 2013)
-
-SELECT DISTINCT 
-       f.name AS name_of_fund,
-       mc.name AS name_of_company,
-       mf.raised_amount AS amount
-FROM fund f 
-     JOIN investment i ON i.fund_id = f.id
-     JOIN main_company mc ON mc.id = i.company_id
-     JOIN main_fund mf ON mf.id = i.funding_round_id;
+SELECT fund.name AS name_of_fund, company.name AS name_of_company, funding_round.raised_amount AS amount
+FROM investment
+JOIN funding_round ON investment.funding_round_id = funding_round.id
+JOIN company ON funding_round.company_id = company.id
+JOIN fund ON investment.fund_id = fund.id
+WHERE company.milestones > 6 
+AND funding_round.funded_at BETWEEN '2012-01-01' AND '2013-12-31';
 ```
 ---
 
@@ -246,16 +219,16 @@ FROM fund f
   Отсортируйте таблицу по сумме сделки от большей к меньшей, а затем по названию купленной компании в лексикографическом порядке. Ограничьте таблицу первыми десятью записями.
 
 ```sql
-SELECT acquiring.name AS acquiring_company_name,
-       asq.price_amount AS price_amount,
+SELECT acquiring.name AS acquiring_company_name, 
+       acquisition.price_amount AS acquisition_price,
        acquired.name AS acquired_company_name,
-       acquired.funding_total AS funding_total,
-       ROUND(price_amount/acquired.funding_total) AS price_for_funding
-FROM acquisition asq
-     JOIN company acquiring ON acquiring.id = asq.acquiring_company_id
-     JOIN company acquired ON acquired.id = asq.acquired_company_id
-WHERE price_amount != 0 AND acquired.funding_total !=0
-ORDER BY price_amount DESC, acquired_company_name
+       acquired.funding_total AS acquired_funding_total,
+       ROUND(acquisition.price_amount / NULLIF(acquired.funding_total, 0)) AS acquisition_to_funding_ratio
+FROM acquisition
+JOIN company AS acquiring ON acquisition.acquiring_company_id = acquiring.id
+JOIN company AS acquired ON acquisition.acquired_company_id = acquired.id
+WHERE acquisition.price_amount != 0 AND acquired.funding_total != 0
+ORDER BY acquisition.price_amount DESC, acquired_company_name
 LIMIT 10;
 ```
 ---
@@ -263,18 +236,13 @@ LIMIT 10;
 16. Выгрузите таблицу, в которую войдут названия компаний из категории social, получившие финансирование с 2010 по 2013 год включительно. Проверьте, что сумма инвестиций не равна нулю. Выведите также номер месяца, в котором проходил раунд финансирования.
 
 ```sql
-WITH 
-social_company AS (SELECT name,
-                          id
-                    FROM company
-                    WHERE category_code = 'social' AND funding_total != 0)
-                    
-SELECT sc.name,
-       EXTRACT(MONTH FROM CAST(fr.funded_at AS TIMESTAMP))
-FROM funding_round fr 
-     JOIN social_company sc ON sc.id = fr.company_id
-WHERE EXTRACT(YEAR FROM CAST(fr.funded_at AS TIMESTAMP)) BETWEEN 2010 AND 2013
-      AND fr.raised_amount != 0;
+SELECT c.name, EXTRACT(MONTH FROM f.funded_at) AS month_number
+FROM company c
+JOIN funding_round f ON c.id = f.company_id
+WHERE c.category_code = 'social'
+AND f.funded_at BETWEEN '2010-01-01' AND '2013-12-31'
+AND f.raised_amount > 0
+ORDER BY month_number;
 ```
 ---
 
@@ -285,27 +253,26 @@ WHERE EXTRACT(YEAR FROM CAST(fr.funded_at AS TIMESTAMP)) BETWEEN 2010 AND 2013
   - общая сумма сделок по покупкам в этом месяце.
 
 ```sql
-WITH
-one AS (SELECT EXTRACT(MONTH FROM CAST(fr.funded_at AS TIMESTAMP)) AS month_round,
-               COUNT(DISTINCT f.name) AS count_name
-         FROM funding_round fr
-              JOIN investment i ON fr.id = i.funding_round_id
-              JOIN fund f ON f.id = i.fund_id
-         WHERE EXTRACT(YEAR FROM CAST(fr.funded_at AS TIMESTAMP)) BETWEEN 2010 AND 2013
-               AND f.country_code = 'USA'
-         GROUP BY month_round),
-two AS (SELECT EXTRACT(MONTH FROM CAST(a.acquired_at AS TIMESTAMP)) AS month_sell,
-               COUNT( a.acquired_company_id) AS count_company_id,
-               SUM(a.price_amount) AS price_amount
-        FROM acquisition a 
-        WHERE EXTRACT(YEAR FROM CAST(acquired_at AS TIMESTAMP)) BETWEEN 2010 AND 2013
-        GROUP BY month_sell)
-
-SELECT month_round,
-       count_name,
-       count_company_id,
-       price_amount
-FROM one JOIN two ON one.month_round = two.month_sell;
+WITH 
+funds AS
+(SELECT EXTRACT (MONTH FROM fr.funded_at) AS month,
+       COUNT(DISTINCT f.name) AS count_of_funds_usa 
+       FROM funding_round AS fr 
+       JOIN investment AS i ON fr.id=i.funding_round_id
+       JOIN fund AS f ON i.fund_id=f.id WHERE EXTRACT(YEAR FROM fr.funded_at) BETWEEN 2010 AND 2013
+       AND f.country_code = 'USA' 
+       GROUP by month),
+acq AS
+(SELECT EXTRACT (MONTH FROM a.acquired_at) AS month,                   
+        COUNT(a.acquired_company_id) AS count_of_acquired,
+        SUM(a.price_amount) AS sum_of_acquired FROM acquisition AS a 
+        WHERE EXTRACT (YEAR FROM a.acquired_at) BETWEEN 2010 AND 2013
+GROUP by month)
+SELECT fs.month,count_of_funds_usa,
+       count_of_acquired,      
+       sum_of_acquired       
+FROM funds AS fs 
+JOIN acq AS aq ON fs.month=aq.month
 ```
 ---
 
@@ -365,121 +332,3 @@ select cast(created_at as date),
        dense_rank() over( order by costs desc)
 from tools_shop.costs;
 ```
----
-
-21. Используя оконную функцию, выведите список уникальных user_id пользователей, которые совершили три заказа и более.
-
-```sql
-with
-users as (select *, row_number() over(partition by user_id order by paid_at) as rn
-             from tools_shop.orders)
-             
-select distinct user_id
-from users
-where rn = 3;
-```
----
-
-22. Рассчитайте количество зарегистрированных пользователей по месяцам с накоплением.
-  Выгрузите два поля:
-  - месяц регистрации, приведённый к типу date;
-  - общее количество зарегистрированных пользователей на текущий месяц.
-
-```sql
-select distinct cast(date_trunc('month', created_at) as date),
-       count(user_id) over(order by cast(date_trunc('month', created_at) as date) )
-from tools_shop.users;
-```
----
-
-23. Рассчитайте сумму трат на привлечение пользователей с накоплением по месяцам c 2017 по 2018 год включительно.
-  Выгрузите два поля:
-  - месяц, приведённый к типу date;
-  - сумма трат на текущий месяц с накоплением.
-
-```sql
-select distinct cast(date_trunc('month', created_at) as date),
-       sum(costs) over(order by cast(date_trunc('month', created_at) as date) )
-from tools_shop.costs
-where extract(year from cast(created_at as timestamp)) between 2017 and 2018;
-```
----
-
-24. Посчитайте события с названием view_item по месяцам с накоплением. Рассчитайте количество событий только для тех пользователей, которые совершили хотя бы одну покупку.
-  Выгрузите поля: 
-  - месяц события, приведённый к типу date;
-  - количество событий за текущий месяц;
-  - количество событий за текущий месяц с накоплением.
-
-```sql
-select distinct cast(date_trunc('month', event_time) as date),
-       count(event_id) over my_window as abc,
-       count(event_id) over w2 as def
-from tools_shop.events
-where event_name = 'view_item' and user_id in (select user_id from tools_shop.orders)
-window my_window AS (partition by cast(date_trunc('month', event_time) as date)),
-       w2 AS (order by cast(date_trunc('month', event_time) as date));
-```
----
-
-25. Используя конструкцию WINDOW, рассчитайте суммарную стоимость и количество заказов с накоплением от месяца к месяцу.
-  Выгрузите поля:
-  - идентификатор заказа;
-  - месяц оформления заказа, приведённый к типу date;
-  - сумма заказа;
-  - количество заказов с накоплением;
-  - суммарная стоимость заказов с накоплением.
-
-```sql
-select distinct order_id,
-       cast(date_trunc('month', created_at) as date),
-       total_amt,
-       count(order_id) over my_window as abc,
-       sum(total_amt) over w2 as def
-from tools_shop.orders
-window my_window AS (order by cast(date_trunc('month', created_at) as date)),
-       w2 AS (order by cast(date_trunc('month', created_at) as date));
-```
----
-
-26. Напишите запрос, который выведет сумму трат на привлечение пользователей по месяцам, а также разницу в тратах между текущим и предыдущим месяцами. Разница должна показывать, на сколько траты текущего месяца отличаются от предыдущего. В случае, если данных по предыдущему месяцу нет, укажите ноль.
-  Выгрузите поля:
-  - месяц, приведённый к типу date;
-  - траты на привлечение пользователей в текущем месяце;
-  - разница в тратах между текущим и предыдущим месяцами.
-
-```sql
-with
-    table_1 as (select  distinct
-                       cast(date_trunc('month', created_at) as date) as my_date,
-                       sum(costs) over my_window as month_cost
-                    from tools_shop.costs
-                    WINDOW my_window AS (partition by cast(date_trunc('month', created_at) as date)))
-
-select my_date,
-       month_cost,
-      month_cost - LAG(month_cost, 1, month_cost) OVER (order BY my_date )
-from table_1;
-```
----
-
-27. Напишите запрос, который выведет сумму выручки по годам и разницу выручки между текущим и следующим годом. Разница должна показывать, на сколько выручка следующего года отличается от текущего. В случае, если данных по следующему году нет, укажите ноль.
-  Выгрузите поля:
-  - год, приведённый к типу date;
-  - выручка за текущий год;
-  - разница в выручке между текущим и следующим годом.
-
-```sql
-with
-    table_1 as (select  distinct
-                       cast(date_trunc('year', paid_at) as date) as my_date,
-                       sum(total_amt) over my_window as month_cost
-                    from tools_shop.orders
-                    WINDOW my_window AS (partition by cast(date_trunc('year', paid_at) as date)))
-
-select my_date,
-       month_cost,
-      lead(month_cost, 1, month_cost) OVER (order BY my_date) - month_cost
-from table_1;
-```
----
