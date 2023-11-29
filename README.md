@@ -31,7 +31,7 @@
 
  <tr>
   <td>2</td>
-  <td><a href = "https://github.com/RamJacky/Portfolio/tree/main/Cars_project">Построение модели определения стоимости автомобиля</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Cars_project">Построение модели определения стоимости автомобиля</a></td>
   <td>Data Scientist / Регрессия / Интернет-сервисы</td>
   <td>На основе исторических данных необходимо построить модель для определения стоимости автомобиля</td>
   <td> 
@@ -46,7 +46,7 @@
 
 <tr>
   <td>3</td>
-  <td><a href = "https://github.com/RamJacky/Portfolio/tree/main/Credits_project">Исследование надежности заемщиков</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Credits_project">Исследование надежности заемщиков</a></td>
   <td>Data Analyst / Банковская сфера</td>
   <td>На основе статистики о платежеспособности клиентов исследовать влияет ли семейное положение и количество детей клиента на факт возврата кредита в срок</td>
   <td> 
@@ -57,7 +57,7 @@
 
 <tr>
   <td>4</td>
-  <td><a href = "https://github.com/RamJacky/Portfolio/tree/main/Games_project">Изучение закономерностей, определяющих успешность игр</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Games_project">Изучение закономерностей, определяющих успешность игр</a></td>
   <td>Data Analyst / Интернет-сервисы</td>
   <td>Используя исторические данные о продажах компьютерных игр, выявить определяющие успешность игры закономерности. Это позволит сделать ставку на потенциально популярный продукт и спланировать рекламные кампании</td>
   <td> 
@@ -81,7 +81,7 @@
 
 <tr>
   <td>6</td>
-  <td><a href = "https://github.com/RamJacky/Portfolio/tree/main/Tariffs_project">Определение перспективного тарифа для телеком компании</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Tariffs_project">Определение перспективного тарифа для телеком компании</a></td>
   <td>Data Analyst / Телеком</td>
   <td>На основе данных клиентов оператора сотовой связи проанализировать поведение клиентов и поиск оптимального тарифа</td>
   <td> 
@@ -93,7 +93,7 @@
   
  <tr>
   <td>7</td>
-  <td><a href = "https://github.com/RamJacky/Portfolio/tree/main/Taxi_project">Прогнозирование количества заказов такси на следующий час</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Taxi_project">Прогнозирование количества заказов такси на следующий час</a></td>
   <td>Data Scientist / Регрессия / Временные ряды / Интернет-сервисы</td>
   <td>На основании исторических данных о заказах такси в аэропортах нужно разработать систему предсказания объема заказа.</td>
   <td> 
@@ -124,7 +124,7 @@
 
  <tr>
   <td>9</td>
-  <td><a href = "https://github.com/RamJacky/Portfolio/tree/main/Twit_project">Обучение модели классификации комментариев</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Twit_project">Обучение модели классификации комментариев</a></td>
   <td>Data Scientist / Классификая / Интернет-сервисы</td>
   <td>Определение токсичности комментариев.</td>
   <td> 
