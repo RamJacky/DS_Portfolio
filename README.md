@@ -19,7 +19,7 @@
 
 <tr>
   <td>1</td>
-  <td><a href = "https://github.com/RamJacky/Portfolio/tree/main/Bank_project">Прогнозирование оттока клиентов банка</a></td>
+  <td><a href = "https://github.com/RamJacky/DS_Portfolio/tree/main/Bank_project">Прогнозирование оттока клиентов банка</a></td>
   <td>Data Scientist / Классификация / Банковская сфера</td>
   <td>На основании исторических данных о поведении клиентов и расторжении договоров с банком нужно спрогнозировать, уйдёт клиент из банка в ближайшее время или нет</td>
   <td> 
