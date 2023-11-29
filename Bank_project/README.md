@@ -82,7 +82,7 @@
 
     <br>
     
-    <img width="800" alt="Screenshot_77" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/15c679bf-d37a-47a1-9303-cc3936b6def1">
+    <img width="800" alt="Screenshot_1" src="https://github.com/RamJacky/DS_Portfolio/blob/main/Bank_project/attachments/bank_1.png">
 
     <br>
 
@@ -93,7 +93,7 @@
 
     <br>
 
-    <img width="800" alt="Screenshot_78" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/a7c40156-0392-49d4-9fa7-328127685f16">
+    <img width="800" alt="Screenshot_2" src="https://github.com/RamJacky/DS_Portfolio/blob/main/Bank_project/attachments/bank_2.png">
 
     <br>
     
@@ -102,7 +102,7 @@
 
     <br>
     
-    <img width="800" alt="Screenshot_79" src="https://github.com/elena-iliushina/Portfolio/assets/133641038/0b9445d9-0537-48d0-abe4-16155cb5922a">
+    <img width="800" alt="Screenshot_79" src="https://github.com/RamJacky/DS_Portfolio/blob/main/Bank_project/attachments/bank_3.png">
 
     <br>
 
