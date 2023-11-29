@@ -82,7 +82,7 @@
 
     <br>
     
-    <img width="800" alt="Screenshot_1" src="https://github.com/RamJacky/DS_Portfolio/blob/main/Bank_project/attachments/bank_1.png">
+    <img width="500" alt="Screenshot_1" src="https://github.com/RamJacky/DS_Portfolio/blob/main/Bank_project/attachments/bank_1.png">
 
     <br>
 
